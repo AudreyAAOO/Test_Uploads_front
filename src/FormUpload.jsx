@@ -1,12 +1,12 @@
-import * as React from "react";
 import { useState } from "react";
 import axios from "axios";
-import { Image } from "cloudinary-react";
+// import { Image } from "cloudinary-react";
 import "./App.css";
 
 const FormUpload = () => {
 	//! STATE
 	const [pictures, setPictures] = useState(); // State qui va contenir l'image sélectionnée
+	const [preview, setPreview] = useState([0]); // State qui va contenir les preview de l'image
 
 	const handlePublish = async (event) => {
 		event.preventDefault();
@@ -17,7 +17,7 @@ const FormUpload = () => {
 		const formData = new FormData(); // constructeur FormData
 
 		try {
-			//! avec forEAch  // <--- ça fonctionne
+			//! avec forEach  // <--- ça fonctionne
 			// const copyPictures = pictures ? [...pictures] : [];
 			// copyPictures.forEach((file) => {
 			// 	formData.append("pictures", file, file.name);
@@ -28,10 +28,9 @@ const FormUpload = () => {
 			//! avec for   // <--- ça fonctionne
 			for (let i = 0; i < pictures.length; i++) {
 				formData.append("pictures", pictures[i]);
-				console.log("formData : ", formData);
+				// formData.append("upload_preset", "dqlooqdn");
+				console.log("formData --> ", formData);
 			}
-
-			// formData.append("upload_preset", "dqlooqdn");
 
 			const response = await axios.post(
 				`http://127.0.0.1:3200/upload`,
@@ -43,11 +42,18 @@ const FormUpload = () => {
 					},
 				}
 			);
+			alert(JSON.stringify("requête effectuée --> ", response.data));
 
-			alert(JSON.stringify(response.data)); //! ?
-			console.log("response axios : ", response);
+			// setPreview(response.data);  // <-- affiche l'image après la requête
+
+			console.log("pictures --> ", pictures);
+			console.log("réponse axios --> ", response.data);
+
+			console.table("preview après requête --> ", preview);
+			console.log("preview[0] après requête --> ", preview[0]);
 		} catch (error) {
-			console.log("catch err response : ", error.response);
+			console.log("catch err response --> ", error.response);
+			console.log("catch err --> ", error);
 		}
 	};
 
@@ -64,11 +70,16 @@ const FormUpload = () => {
 					type="file"
 					multiple="multiple"
 					onChange={(event) => {
-						// console.log(event.target.files[0]);
-						console.log("log event.target.files : ", event.target.files); // voir les détails de l'image
 						setPictures(event.target.files);
+						// setPreview(URL.createObjectURL(event.target.files[0]));
+
+						const copy = [...preview];
+						setPreview(copy.push(event.target.files));
+						console.log("preview avant requête --> ", preview);
+						console.log("event.target.files --> ", event.target.files);
+						console.log("event.target.files[0] --> ", event.target.files[0]);
+						console.log("event.target.files[1] --> ", event.target.files[1]);
 					}}
-					// style={{ display: "none" }}
 				/>
 				<div>
 					<button className="button" type="submit">
@@ -76,21 +87,26 @@ const FormUpload = () => {
 					</button>
 				</div>
 				{/* //TODO
-				//! afficher une preview des images  */}
-
-				{/* <Image 
-				cloudName="JohnDoe" 
-				publicId="https://urlimage.png" /> pas dynamique et montre la clé perso  */} 
-
+				//! afficher une preview des images 	preview && */}
 				<div>
-					{/* {pictures && (
+					{/* {preview.map((pic) => {return (<><img src={URL.createObjectURL(pic)} alt="pré-visualisation" />
+								<img src={pic} alt="pré-visualisation" /></>);})} */}
+				</div>
+				<div>
+					{preview > 1 && (
 						<img
 							className="preview_img"
-							src={URL.createObjectURL(pictures)}
-							alt="preview"
+							// src={URL.createObjectURL(preview)}
+							src={preview}
+							alt="preview_img"
 						/>
-					)} */}
+					)}
 				</div>
+
+				{/* //TODO voir si on peur récup l'url dynamiquement */}
+				{/* <Image 
+				cloudName="JohnDoe" 
+				publicId="https://urldeimage.png" /> pas dynamique et montre la clé perso  */}
 			</form>
 		</div>
 	);

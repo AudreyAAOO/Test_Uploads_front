@@ -14,11 +14,17 @@
 .cadreFormPublish {
 	background-color: #f2f3f3;
 	width: 90%;
-	height: 50vh;
-
+	height: 80vh;
 	margin: 50px 50px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+}
+
+.preview_img {
+	width: 150px;
+	height: 180px;
+	object-fit: contain;
+	border: 1px solid black;
 }

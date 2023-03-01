@@ -1,8 +1,6 @@
-import * as React from "react";
 import { useState } from "react";
 import axios from "axios";
-import { Image } from "cloudinary-react";
-
+//
 const FormUploadOne = () => {
 	//! STATE
 	const [oneImg, setOneImg] = useState(); // State qui va contenir l'image sélectionnée
@@ -14,7 +12,7 @@ const FormUploadOne = () => {
 			"YI_645ieZ3z0YuuJu58vEJ3OLwAUMzEyHJbKEpcGnKSnOsynqA7qFoZ_GMg_2LAe";
 
 		const formData = new FormData(); // constructeur FormData
-        formData.append("pictures", oneImg);
+		formData.append("pictures", oneImg);
 		try {
 			const response = await axios.post(
 				`http://127.0.0.1:3200/upload`,
