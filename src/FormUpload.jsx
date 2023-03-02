@@ -6,7 +6,8 @@ import "./App.css";
 const FormUpload = () => {
 	//! STATE
 	const [pictures, setPictures] = useState(); // State qui va contenir l'image sélectionnée
-	const [preview, setPreview] = useState([0]); // State qui va contenir les preview de l'image
+	const [preview, setPreview] = useState([]); // State qui va contenir les preview de l'image
+	// const array = [];
 
 	const handlePublish = async (event) => {
 		event.preventDefault();
@@ -44,10 +45,10 @@ const FormUpload = () => {
 			);
 			alert(JSON.stringify("requête effectuée --> ", response.data));
 
-			// setPreview(response.data);  // <-- affiche l'image après la requête
-
 			console.log("pictures --> ", pictures);
 			console.log("réponse axios --> ", response.data);
+
+			setPreview([]);
 
 			console.table("preview après requête --> ", preview);
 			console.log("preview[0] après requête --> ", preview[0]);
@@ -65,6 +66,7 @@ const FormUpload = () => {
 				<label htmlFor="addPhotos" className="addPhoto">
 					<h4>+ Ajoute des photos</h4>
 				</label>
+
 				<input
 					id="addPhotos"
 					type="file"
@@ -72,10 +74,16 @@ const FormUpload = () => {
 					onChange={(event) => {
 						setPictures(event.target.files);
 						// setPreview(URL.createObjectURL(event.target.files[0]));
-
-						const copy = [...preview];
-						setPreview(copy.push(event.target.files));
-						console.log("preview avant requête --> ", preview);
+						for (const item of event.target.files) {
+							console.log("item: ", item);
+							// setPreview(array.push(URL.createObjectURL(item))
+							// array.push(item)
+							const array = [];
+							setPreview(array.push(URL.createObjectURL(item)));
+							console.log("preview --> ", preview);
+							console.table("array --> ", array);
+							console.log("array[0] --> ", array[0]);
+						}
 						console.log("event.target.files --> ", event.target.files);
 						console.log("event.target.files[0] --> ", event.target.files[0]);
 						console.log("event.target.files[1] --> ", event.target.files[1]);
@@ -87,19 +95,23 @@ const FormUpload = () => {
 					</button>
 				</div>
 				{/* //TODO
-				//! afficher une preview des images 	preview && */}
+				//! afficher une preview des images */}
 				<div>
-					{/* {preview.map((pic) => {return (<><img src={URL.createObjectURL(pic)} alt="pré-visualisation" />
-								<img src={pic} alt="pré-visualisation" /></>);})} */}
+					{/* {preview && 
+					preview.map((pic, i) => {
+						console.log("pic ", pic);
+						// console.log("URL.createObjectURL(pic) : ", URL.createObjectURL(pic));
+						return (<img
+								key={i}
+								// src={URL.createObjectURL(pic[i])}
+								src={pic}
+								alt="pré-visualisation"
+								className="preview_img"
+							/>);})} */}
 				</div>
 				<div>
 					{preview > 1 && (
-						<img
-							className="preview_img"
-							// src={URL.createObjectURL(preview)}
-							src={preview}
-							alt="preview_img"
-						/>
+						<img className="preview_img" src={preview} alt="preview_img" />
 					)}
 				</div>
 
