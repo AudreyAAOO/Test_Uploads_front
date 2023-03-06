@@ -7,7 +7,6 @@ const FormUpload = () => {
 	//! STATE
 	const [pictures, setPictures] = useState(); // State qui va contenir l'image sélectionnée
 	const [preview, setPreview] = useState([]); // State qui va contenir les preview de l'image
-	// const array = [];
 
 	const userToken =
 		"YI_645ieZ3z0YuuJu58vEJ3OLwAUMzEyHJbKEpcGnKSnOsynqA7qFoZ_GMg_2LAe";
@@ -85,36 +84,39 @@ const FormUpload = () => {
 				<label htmlFor="addPhotos" className="addPhoto">
 					<h4>+ Ajoute des photos</h4>
 				</label>
-
 				<input
 					id="addPhotos"
 					type="file"
 					multiple="multiple"
 					onChange={handlePreview}
 				/>
+
 				<div>
 					<button className="button" type="submit">
 						ENVOYER
 					</button>
 				</div>
-				{/* //TODO
-				//! afficher une preview des images */}
+
 				<div>
-					{/* //! ça fonctionne !!!!! -------------------------------------------- */}
+					{/* //! afficher une preview des images ------------------------------------ */}
+					{/* //! ça fonctionne !!!!! */}
+					{/* //! ah ben non  !!!!! */}
 					{preview.length > 0 &&
 						preview.map((pic, i) => {
-							console.log("pic ", pic);
+							console.log("pic ", pic.name);
 							console.log(
 								"URL.createObjectURL(pic) : ",
 								URL.createObjectURL(pic)
 							);
 							return (
-								<img
-									key={i}
-									src={URL.createObjectURL(pic)}
-									alt="pré-visualisation"
-									className="preview_img"
-								/>
+								<div key={i}>
+									<p>{pic.name}</p>
+									<img
+										src={URL.createObjectURL(pic)}
+										alt="pré-visualisation"
+										className="preview_img"
+									/>
+								</div>
 							);
 						})}
 				</div>
