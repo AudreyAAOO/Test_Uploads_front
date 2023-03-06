@@ -97,17 +97,18 @@ const FormUpload = () => {
 				{/* //TODO
 				//! afficher une preview des images */}
 				<div>
+					{/* //! commenté car msg d'erreur -------------------------------------------- */}
 					{/* {preview && 
 					preview.map((pic, i) => {
 						console.log("pic ", pic);
 						// console.log("URL.createObjectURL(pic) : ", URL.createObjectURL(pic));
 						return (<img
 								key={i}
-								// src={URL.createObjectURL(pic[i])}
-								src={pic}
+								src={URL.createObjectURL(pic[i])}
+								//src={pic}
 								alt="pré-visualisation"
 								className="preview_img"
-							/>);})} */}
+							/>);})}  */}
 				</div>
 				<div>
 					{preview > 1 && (
@@ -115,7 +116,7 @@ const FormUpload = () => {
 					)}
 				</div>
 
-				{/* //TODO voir si on peur récup l'url dynamiquement */}
+				{/* //TODO voir si on peut récup l'url dynamiquement du package cloudinary-react) */}
 				{/* <Image 
 				cloudName="JohnDoe" 
 				publicId="https://urldeimage.png" /> pas dynamique et montre la clé perso  */}
