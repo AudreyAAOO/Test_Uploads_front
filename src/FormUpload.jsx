@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 // import { Image } from "cloudinary-react";
 import "./App.css";
@@ -9,14 +9,13 @@ const FormUpload = () => {
 	const [preview, setPreview] = useState([]); // State qui va contenir les preview de l'image
 	// const array = [];
 
+	const userToken =
+		"YI_645ieZ3z0YuuJu58vEJ3OLwAUMzEyHJbKEpcGnKSnOsynqA7qFoZ_GMg_2LAe";
+
 	const handlePublish = async (event) => {
 		event.preventDefault();
 
-		const userToken =
-			"YI_645ieZ3z0YuuJu58vEJ3OLwAUMzEyHJbKEpcGnKSnOsynqA7qFoZ_GMg_2LAe";
-
 		const formData = new FormData(); // constructeur FormData
-
 		try {
 			//! avec forEach  // <--- ça fonctionne
 			// const copyPictures = pictures ? [...pictures] : [];
@@ -43,20 +42,40 @@ const FormUpload = () => {
 					},
 				}
 			);
+
 			alert(JSON.stringify("requête effectuée --> ", response.data));
 
 			console.log("pictures --> ", pictures);
 			console.log("réponse axios --> ", response.data);
 
-			setPreview([]);
-
-			console.table("preview après requête --> ", preview);
-			console.log("preview[0] après requête --> ", preview[0]);
+			setPreview([]); // réinitialiser preview à vide
+			setPictures();
+			// console.table("preview après requête --> ", preview);
+			// console.log("preview[0] après requête --> ", preview[0]);
 		} catch (error) {
 			console.log("catch err response --> ", error.response);
 			console.log("catch err --> ", error);
 		}
 	};
+
+	const handlePreview = (event) => {
+		setPictures(event.target.files);
+		for (const item of event.target.files) {
+			console.log("item: ", item);
+			const array = [...preview];
+			array.push(item);
+			console.table("array --> ", array);
+			setPreview(array);
+			console.log("preview --> ", preview);
+		}
+		// console.log("event.target.files --> ", event.target.files);
+		// console.log("event.target.files[0] --> ", event.target.files[0]);
+		// console.log("event.target.files[1] --> ", event.target.files[1]);
+	};
+
+	useEffect(() => {
+		console.log("useEffect ok");
+	}, [handlePreview]);
 
 	return (
 		<div className="cadreFormPublish">
@@ -71,23 +90,7 @@ const FormUpload = () => {
 					id="addPhotos"
 					type="file"
 					multiple="multiple"
-					onChange={(event) => {
-						setPictures(event.target.files);
-						// setPreview(URL.createObjectURL(event.target.files[0]));
-						for (const item of event.target.files) {
-							console.log("item: ", item);
-							// setPreview(array.push(URL.createObjectURL(item))
-							// array.push(item)
-							const array = [];
-							setPreview(array.push(URL.createObjectURL(item)));
-							console.log("preview --> ", preview);
-							console.table("array --> ", array);
-							console.log("array[0] --> ", array[0]);
-						}
-						console.log("event.target.files --> ", event.target.files);
-						console.log("event.target.files[0] --> ", event.target.files[0]);
-						console.log("event.target.files[1] --> ", event.target.files[1]);
-					}}
+					onChange={handlePreview}
 				/>
 				<div>
 					<button className="button" type="submit">
@@ -97,23 +100,23 @@ const FormUpload = () => {
 				{/* //TODO
 				//! afficher une preview des images */}
 				<div>
-					{/* //! commenté car msg d'erreur -------------------------------------------- */}
-					{/* {preview && 
-					preview.map((pic, i) => {
-						console.log("pic ", pic);
-						// console.log("URL.createObjectURL(pic) : ", URL.createObjectURL(pic));
-						return (<img
-								key={i}
-								src={URL.createObjectURL(pic[i])}
-								//src={pic}
-								alt="pré-visualisation"
-								className="preview_img"
-							/>);})}  */}
-				</div>
-				<div>
-					{preview > 1 && (
-						<img className="preview_img" src={preview} alt="preview_img" />
-					)}
+					{/* //! ça fonctionne !!!!! -------------------------------------------- */}
+					{preview.length > 0 &&
+						preview.map((pic, i) => {
+							console.log("pic ", pic);
+							console.log(
+								"URL.createObjectURL(pic) : ",
+								URL.createObjectURL(pic)
+							);
+							return (
+								<img
+									key={i}
+									src={URL.createObjectURL(pic)}
+									alt="pré-visualisation"
+									className="preview_img"
+								/>
+							);
+						})}
 				</div>
 
 				{/* //TODO voir si on peut récup l'url dynamiquement du package cloudinary-react) */}
