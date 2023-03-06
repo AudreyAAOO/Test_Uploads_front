@@ -5,7 +5,7 @@ import "./App.css";
 
 const FormUpload = () => {
 	//! STATE
-	const [pictures, setPictures] = useState(); // State qui va contenir l'image sélectionnée
+	const [pictures, setPictures] = useState({}); // State qui va contenir l'image sélectionnée
 	const [preview, setPreview] = useState([]); // State qui va contenir les preview de l'image
 
 	const userToken =
@@ -48,7 +48,8 @@ const FormUpload = () => {
 			console.log("réponse axios --> ", response.data);
 
 			setPreview([]); // réinitialiser preview à vide
-			setPictures();
+			setPictures({});
+
 			// console.table("preview après requête --> ", preview);
 			// console.log("preview[0] après requête --> ", preview[0]);
 		} catch (error) {
@@ -57,16 +58,35 @@ const FormUpload = () => {
 		}
 	};
 
+	//* attention les logs ont 1 temps de retard (= changement de state asynchrone)
+
 	const handlePreview = (event) => {
 		setPictures(event.target.files);
-		for (const item of event.target.files) {
-			console.log("item: ", item);
-			const array = [...preview];
-			array.push(item);
-			console.table("array --> ", array);
-			setPreview(array);
-			console.log("preview --> ", preview);
+
+		// 1.
+		let array = [];
+
+		//2.
+		for (let i = 0; i < event.target.files.length; i++) {
+			array.push(event.target.files[i]);
 		}
+
+		//3.
+		setPreview(array);
+
+		// for (const item of event.target.files) { //! for of approprié pour les objets simples
+		// 	console.log("item: ", item);
+		// 	const array = [...preview];  //! pas ds la boucle, et pas nécessaire ici
+		// 	array.push(item);
+		// 	// console.table("array --> ", array);
+		// 	setPreview(array);    //! attention pas rafraichir le state ds la boucle
+		// const array = [...preview];
+		// 	array.push(item);
+		// 	// console.table("array --> ", array);
+		// 	setPreview(array);
+
+		// 	// console.log("preview --> ", preview);
+		// }
 		// console.log("event.target.files --> ", event.target.files);
 		// console.log("event.target.files[0] --> ", event.target.files[0]);
 		// console.log("event.target.files[1] --> ", event.target.files[1]);
@@ -83,14 +103,15 @@ const FormUpload = () => {
 			<form onSubmit={handlePublish} id="form">
 				<label htmlFor="addPhotos" className="addPhoto">
 					<h4>+ Ajoute des photos</h4>
-				</label>
-				<input
-					id="addPhotos"
-					type="file"
-					multiple="multiple"
-					onChange={handlePreview}
-				/>
 
+					<input
+						id="addPhotos"
+						type="file"
+						multiple="multiple"
+						onChange={handlePreview}
+						// value={pictures}
+					/>
+				</label>
 				<div>
 					<button className="button" type="submit">
 						ENVOYER
@@ -100,7 +121,6 @@ const FormUpload = () => {
 				<div>
 					{/* //! afficher une preview des images ------------------------------------ */}
 					{/* //! ça fonctionne !!!!! */}
-					{/* //! ah ben non  !!!!! */}
 					{preview.length > 0 &&
 						preview.map((pic, i) => {
 							console.log("pic ", pic.name);

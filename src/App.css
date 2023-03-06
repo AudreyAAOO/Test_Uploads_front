@@ -28,3 +28,13 @@
 	object-fit: contain;
 	border: 1px solid #000000;
 }
+
+.addPhoto {
+	background-color: bisque;
+	height: 50px;
+	width: 100px;
+}
+
+input[type="file"] {
+	display: none;
+}
